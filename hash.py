@@ -1,25 +1,57 @@
+from hashlib import sha256
+
 class TabelaHash:
-    def __init__(self, tamanho=10):
+    class Elemento:
+        def __init__(self, chave, valor):
+            self.chave = chave
+            self.valor = valor
 
-        self.tamanho = tamanho
-        self.tabela = [None] * tamanho
+    def __init__(self):
+        self.capacidade_atual = 5
+        self.tabela_initerna = [[] for _ in range(self.capacidade_atual)]
+        self.tamanho = 0
 
-        def funcao_hash(self, chave):
-            soma = 0
-            for letra in chave:
-                soma += ord(letra)
-                return soma % self.tamanho
+    def __len__(self):
+        return self.tamanho
+    
+
+    def verificar_chave(self, chave):
+        hash(chave)
+    
+
+    def hash_deterministico(chave):
+        codificado = str(chave).encode()
+        return int(sha256(codificado).hexdigest(), 16)
+    
+
+    def descobrir_indice(self, chave):
+        return self.hash_deterministico(chave) % self.capacidade_atual
+    
+    def __setitem__(self, chave, valor):
+        self.verificar_chave(chave)
+
+        indice = self.descobrir_indice(chave)
+
+        # Verificando se a chave já existe na tabela
+        for elemento in self.tabela_initerna[indice]:
+            if elemento.chave == chave:
+                elemento.valor = valor  # se ele encontrar, vai atualizar o valor
+                return 
             
-        def inserir(self, chave, valor):
-            indice = self.funcao_hash(chave)
+        # Se não encontrar, deve adicionar um novo valor
+        novo_elemento = self.Elemento(chave, valor)
+        self.tabela_initerna[indice].append(novo_elemento)
+        self.tamanho += 1
+    
 
-# AINDA NÃO FOI TERMINADO O CÓDIGO
 
-# tabela = TabelaHash()
+aluno = TabelaHash()
 
-#tabela.inserir("nome", "Welterson")
-#tabela.inserir("idade", 22)
-#tabela.inserir("cidade", "Guanambi")
+aluno['nome'] = 'Welterson'
+aluno['RA'] = 1012420627
+aluno['curso'] = 'ciencia da computacao'
+aluno['professor'] = 'hissamu'
+aluno['uc'] = 'estrutura de dados'
+aluno['semestre'] = 3
 
-#print(tabela.buscar("nome"))  # Saída: Welterson
-#print(tabela)
+print(f'Quantidade de elementos: {len(aluno)}')
